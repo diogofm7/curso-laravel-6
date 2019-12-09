@@ -131,4 +131,4 @@ Route::get('/products/{id}', 'ProductController@show')->name('products.show'); /
 Route::get('/products', 'ProductController@index')->name('products.index'); // Listar Produtos
 Route::post('/products', 'ProductController@store')->name('products.store'); // Salvar Novo Produto
 */
-Route::resource('products', 'ProductController');
+Route::resource('products', 'ProductController'); //->middleware('auth');
