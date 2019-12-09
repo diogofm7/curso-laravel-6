@@ -6,7 +6,7 @@
 
     <h1>Exibindo Produtos</h1>
 
-    <a href=d"{{ route('products.create') }}">Cadastrar</a>
+    <a href="{{ route('products.create') }}">Cadastrar</a>
 
     <hr>
 
