@@ -118,8 +118,16 @@ Route::group([
     })->name('home');
 });
 
-
-
 Route::get('/login', function (){
     return 'login';
 })->name('login');
+
+
+Route::delete('/products/{id}', 'ProductController@destroy')->name('products.destroy'); // Deletar Produto
+Route::put('/products/{id}', 'ProductController@update')->name('products.update'); // Alteração do Produto
+Route::get('/products/{id}/edit', 'ProductController@edit')->name('products.edit'); // Formulario de Edição do Produto
+Route::get('/products/create', 'ProductController@create')->name('products.create'); // Formulario de Criação do Produto
+Route::get('/products/{id}', 'ProductController@show')->name('products.show'); // Exibir um Produto
+Route::get('/products', 'ProductController@index')->name('products.index'); // Listar Produtos
+Route::post('/products', 'ProductController@store')->name('products.store'); // Salvar Novo Produto
+
