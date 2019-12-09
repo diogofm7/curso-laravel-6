@@ -6,40 +6,79 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
-        $products = ['Product 01', 'Product 02', 'Product 03'];
-
-        return $products;
+        return 'Listagem dos Produtos';
     }
 
-    public function show($id)
-    {
-        return "Exibindo o produto de id: {$id}";
-    }
-
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        return 'Exibindo o form de cadastro de um novo produto';
+        //
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function edit($id)
     {
-        return "Exibindo o form para editar o produto de id: {$id}";
+        //
     }
 
-    public function store()
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
     {
-        return 'Cadastrando um novo produto';
+        //
     }
 
-    public function update($id)
-    {
-        return "Editando o produto: {$id}";
-    }
-
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
-        return "Excluindo o produto: {$id}";
+        //
     }
 }
