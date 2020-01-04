@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUpdateProductRequest;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -55,15 +56,17 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUpdateProductRequest $request)
     {
+
+        dd('OK');
+        /*
         $request->validate([
             'name' => 'required|min:3|max:255',
             'description' => 'nullable|min:3|max:10000',
             'photo' => 'required|image'
         ]);
-
-        dd('OK');
+        */
 
         //dd($request->all());
         //dd($request->only(['name', 'description']));
