@@ -3,15 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateProductRequest;
+use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    protected $request;
+    private $product;
 
-    public function __construct(Request $request)
+    public function __construct(Product $product)
     {
-        $this->request = $request;
+        $this->product = $product;
 
         /*
         $this->middleware('auth');
@@ -32,12 +34,12 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $teste = 123;
-        $teste2 = 'aaa';
-        $teste3 = [1,2,3,4,5];
-        $products = ['Tv', 'Geladeira', 'Forne', 'Sofá'];
 
-        return view('admin.pages.products.index', compact('teste', 'teste2', 'teste3', 'products'));
+        $products = $this->product->latest()->paginate(15);
+
+        return view('admin.pages.products.index', [
+            'products' => $products
+        ]);
     }
 
     /**
@@ -58,31 +60,17 @@ class ProductController extends Controller
      */
     public function store(StoreUpdateProductRequest $request)
     {
+        $data = $request->only('name', 'price','description');
 
-        dd('OK');
-        /*
-        $request->validate([
-            'name' => 'required|min:3|max:255',
-            'description' => 'nullable|min:3|max:10000',
-            'photo' => 'required|image'
-        ]);
-        */
+        if($request->hasFile('image') && $request->image->isValid()){
+            $imagePath = $request->image->store('products');
 
-        //dd($request->all());
-        //dd($request->only(['name', 'description']));
-        //dd($request->description);
-        //dd($request->has('name'));
-        //dd($request->input('teste', 'Default'));
-        //dd($request->file('photo')->isValid());
-
-        if ($request->file('photo')->isValid()){
-           //dd($request->file('photo')->store('products'));
-            $nameFile = $request->name . '.' . $request->photo->extension();
-            dd($request->file('photo')->storeAs('products', $nameFile));
+            $data['image'] = $imagePath;
         }
 
+        Product::create($data);
 
-
+        return redirect()->route('products.index');
     }
 
     /**
@@ -93,7 +81,13 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        //
+        $product = $this->product->find($id);
+
+        if (!$product) return redirect()->back();
+
+        return view('admin.pages.products.show', [
+            'product' => $product
+        ]);
     }
 
     /**
@@ -104,7 +98,11 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        return view('admin.pages.products.edit', compact('id'));
+        $product = $this->product->find($id);
+
+        return view('admin.pages.products.edit', [
+            'product' => $product
+        ]);
     }
 
     /**
@@ -114,9 +112,27 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreUpdateProductRequest $request, $id)
     {
-        dd("Editando o produto {$id}");
+        $product = $this->product->find($id);
+
+        if (!$product) return redirect()->back();
+
+        $data = $request->all();
+
+        if($request->hasFile('image') && $request->image->isValid()){
+            if ($product->image && Storage::exists($product->image)){
+                Storage::delete($product->image);
+            }
+
+            $imagePath = $request->image->store('products');
+
+            $data['image'] = $imagePath;
+        }
+
+        $product->update($data);
+
+        return redirect()->route('products.index');
     }
 
     /**
@@ -127,6 +143,28 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $product = $this->product->find($id);
+
+        if (!$product) return redirect()->back();
+
+        if ($product->image && Storage::exists($product->image)){
+            Storage::delete($product->image);
+        }
+
+        $product->delete();
+
+        return redirect()->route('products.index');
+    }
+
+    public function search(Request $request)
+    {
+        $filters = $request->except('_token');
+
+        $products = $this->product->search($request->filter);
+
+        return view('admin.pages.products.index', [
+            'products' => $products,
+            'filters' => $filters
+        ]);
     }
 }

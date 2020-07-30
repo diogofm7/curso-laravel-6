@@ -131,4 +131,8 @@ Route::get('/products/{id}', 'ProductController@show')->name('products.show'); /
 Route::get('/products', 'ProductController@index')->name('products.index'); // Listar Produtos
 Route::post('/products', 'ProductController@store')->name('products.store'); // Salvar Novo Produto
 */
-Route::resource('products', 'ProductController'); //->middleware('auth');
+
+Route::any('products/search', 'ProductCOntroller@search')->name('products.search')->middleware('auth');
+Route::resource('products', 'ProductController')->middleware(['auth', 'check.is.admin']);
+
+Auth::routes(['register' => false]);
